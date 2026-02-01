@@ -3,8 +3,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import rateLimit from "express-rate-limit";
-import ProductRoutes from "./routes/products.routes";
-
+import productRoutes from "./routes/products.routes";
+import authRoutes from "./routes/auth.routes";
 const app = express();
 
 const limiter = rateLimit({
@@ -31,7 +31,8 @@ app.get("/", (_, res) => {
   res.send("API running");
 });
 
-app.use("/products", ProductRoutes);
+app.use("/products", productRoutes);
+app.use("/auth", authRoutes);
 
 // Listen on port 4000
 const PORT = 4000;
