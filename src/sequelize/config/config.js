@@ -18,12 +18,15 @@ module.exports = {
     dialect: "postgres",
     logging: false,
 
-    dialectOptions: {
-      use_env_variable: "INTERNAL_DB_URL",
+    production: {
+      use_env_variable: "DATABASE_URL", // Render provides this
       dialect: "postgres",
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
+      logging: false,
+      dialectOptions: {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false, // needed for some hosted DBs
+        },
       },
     },
   },
