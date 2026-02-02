@@ -11,7 +11,7 @@ import {
 export async function registerUserController(req: Request, res: Response) {
   try {
     const { fullName, email, phoneNumber, password } = req.body;
-
+    console.log(email);
     const user = await registerUserService(
       fullName,
       email,
@@ -113,6 +113,7 @@ export async function loginUserController(req: Request, res: Response) {
 
     // ONLY return 401 if it is explicitly invalid credentials
     if (error.message === "INVALID_CREDENTIALS") {
+      console.log("enter");
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",

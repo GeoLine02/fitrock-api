@@ -8,10 +8,11 @@ export async function registerUserService(
   password: string,
 ) {
   try {
+    console.log(email);
     const existingEmail = await Users.findOne({
       where: { email: email },
     });
-
+    console.log("existingEmail", existingEmail);
     if (existingEmail) {
       throw new Error("EXISTING_EMAIL_ERROR");
     }
@@ -35,10 +36,17 @@ export async function registerUserService(
 export async function loginUserService(email: string, password: string) {
   try {
     const existingUser = await Users.findOne({
-      where: { email: email, password: password },
+      where: { email: email },
     });
 
     if (!existingUser) {
+      throw new Error("INVALID_CREDENTIALS");
+    }
+
+    const isPasswordMatch = bcrypt.compare(password, existingUser?.password);
+
+    console.log("existingUser", existingUser);
+    if (!isPasswordMatch) {
       throw new Error("INVALID_CREDENTIALS");
     }
 
