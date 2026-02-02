@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const registerUserSchema = z.object({
-  full_name: z
+  fullName: z
     .string()
     .min(2, "Full name must be at least 2 characters")
     .max(50, "Full name cannot exceed 50 characters"),
@@ -10,7 +10,7 @@ export const registerUserSchema = z.object({
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(128, "Password cannot exceed 128 characters"),
-  phone_number: z
+  phoneNumber: z
     .string()
     .regex(/^\d+$/, "Phone number must contain only digits")
     .min(10, "Phone number must be at least 10 digits")
