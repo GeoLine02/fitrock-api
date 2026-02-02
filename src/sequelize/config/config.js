@@ -18,8 +18,9 @@ module.exports = {
     dialect: "postgres",
     logging: false,
 
-    // Needed for many cloud DB providers
     dialectOptions: {
+      use_env_variable: "INTERNAL_DB_URL",
+      dialect: "postgres",
       ssl: {
         require: true,
         rejectUnauthorized: false,
