@@ -19,7 +19,7 @@ module.exports = {
     logging: false,
 
     production: {
-      use_env_variable: "DATABASE_URL", // Render provides this
+      use_env_variable: "INTENRAL_DB_URL", // Render provides this
       dialect: "postgres",
       logging: false,
       dialectOptions: {
