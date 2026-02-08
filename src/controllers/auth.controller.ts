@@ -161,17 +161,16 @@ export async function logOutUserController(_req: Request, res: Response) {
 
 export async function refreshTokenController(req: Request, res: Response) {
   try {
-    console.log("cookies", req.cookies);
-    console.log("headers", req.headers);
+    const refreshToken = req.cookies?.refreshToken;
 
-    const newAccessToken = await refreshTokenService(req.cookies.refreshToken);
-
-    if (!newAccessToken) {
+    if (!refreshToken) {
       return res.status(401).json({
         success: false,
-        message: "Invalid refresh token",
+        message: "Refresh token missing",
       });
     }
+
+    const newAccessToken = await refreshTokenService(refreshToken);
 
     const isProduction = process.env.NODE_ENV === "production";
 
@@ -181,11 +180,16 @@ export async function refreshTokenController(req: Request, res: Response) {
       sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
     });
+
+    return res.status(200).json({
+      success: true,
+      message: "Access token refreshed successfully",
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({
+    return res.status(401).json({
       success: false,
-      message: "Internal Server Error",
+      message: "Invalid refresh token",
     });
   }
 }

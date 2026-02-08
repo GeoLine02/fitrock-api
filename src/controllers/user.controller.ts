@@ -10,7 +10,7 @@ export async function getUserController(req: Request, res: Response) {
 
     const user = await getUserService(userId);
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       data: user,
     });
@@ -23,10 +23,10 @@ export async function getUserController(req: Request, res: Response) {
         message: "User not found",
       });
     }
-  }
 
-  return res.status(500).json({
-    success: false,
-    message: "Internal Server Error",
-  });
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
 }
