@@ -1,5 +1,7 @@
 import { Users } from "../sequelize/models/users";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { generateAccessToken } from "../utils/generateToken";
 
 export async function registerUserService(
   fullName: string,
@@ -51,6 +53,26 @@ export async function loginUserService(email: string, password: string) {
     }
 
     return existingUser;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function refreshTokenService(refreshToken: string) {
+  try {
+    const validatedToken = jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET as string,
+    ) as { id: number };
+
+    if (!validatedToken) {
+      throw new Error("INVALID_REFRESH_TOKEN");
+    }
+
+    const newAccessToken = generateAccessToken({ id: validatedToken.id });
+
+    return newAccessToken;
   } catch (error) {
     console.log(error);
     throw error;

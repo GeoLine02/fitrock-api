@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import {
   loginUserService,
+  refreshTokenService,
   registerUserService,
 } from "../services/auth.service";
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/generateToken";
+import { tr } from "zod/v4/locales";
 
 export async function registerUserController(req: Request, res: Response) {
   try {
@@ -148,6 +150,34 @@ export async function logOutUserController(_req: Request, res: Response) {
     res.status(200).json({
       success: true,
       message: "Logged out successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+}
+
+export async function refreshTokenController(req: Request, res: Response) {
+  try {
+    const newAccessToken = await refreshTokenService(req.cookies.refreshToken);
+
+    if (!newAccessToken) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+    }
+
+    const isProduction = process.env.NODE_ENV === "production";
+
+    res.cookie("accessToken", newAccessToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "lax" : "none",
+      maxAge: 15 * 60 * 1000,
     });
   } catch (error) {
     console.error(error);
