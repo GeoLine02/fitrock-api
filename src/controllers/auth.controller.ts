@@ -8,7 +8,6 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/generateToken";
-import { tr } from "zod/v4/locales";
 
 export async function registerUserController(req: Request, res: Response) {
   try {
@@ -31,14 +30,14 @@ export async function registerUserController(req: Request, res: Response) {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "lax" : "none",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "lax" : "none",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
     });
 
@@ -87,14 +86,14 @@ export async function loginUserController(req: Request, res: Response) {
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "lax" : "none",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "lax" : "none",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
     });
 
@@ -138,13 +137,13 @@ export async function logOutUserController(_req: Request, res: Response) {
     res.clearCookie("accessToken", {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "lax" : "none",
+      sameSite: isProduction ? "none" : "lax",
     });
 
     res.clearCookie("refreshToken", {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "lax" : "none",
+      sameSite: isProduction ? "none" : "lax",
     });
 
     res.status(200).json({
@@ -162,6 +161,9 @@ export async function logOutUserController(_req: Request, res: Response) {
 
 export async function refreshTokenController(req: Request, res: Response) {
   try {
+    console.log("cookies", req.cookies);
+    console.log("headers", req.headers);
+
     const newAccessToken = await refreshTokenService(req.cookies.refreshToken);
 
     if (!newAccessToken) {
@@ -176,7 +178,7 @@ export async function refreshTokenController(req: Request, res: Response) {
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "lax" : "none",
+      sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
     });
   } catch (error) {
