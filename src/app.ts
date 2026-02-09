@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Test route
-app.get("/", (_, res) => {
+app.get("/", (req, res) => {
   res.send("API running");
 });
 
