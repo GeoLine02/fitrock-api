@@ -29,7 +29,11 @@ export class Users
 
   // Associations placeholder
   static associate(models: any) {
-    // define associations here, e.g., this.hasMany(models.Products)
+    Users.hasMany(models.Cart, {
+      foreignKey: "user_id",
+      as: "carts",
+      onDelete: "CASCADE",
+    });
   }
 }
 
