@@ -3,13 +3,13 @@ import { getProductsService } from "../services/products.service";
 
 export async function getProductsController(req: Request, res: Response) {
   try {
-    const page = Number(req.query.page) || 1;
-
-    const products = await getProductsService(page);
-
-    res.status(200).json({
-      success: true,
-      data: products,
+    const { page, products, nextPage } = await getProductsService(
+      Number(req.query.page),
+    );
+    return res.status(200).json({
+      products,
+      currentPage: page,
+      nextPage,
     });
   } catch (error: any) {
     console.error(error);
@@ -21,5 +21,26 @@ export async function getProductsController(req: Request, res: Response) {
         message: "Internal Server Error",
       });
     }
+  }
+}
+
+export async function getProductByIdController(req: Request, res: Response) {
+  try {
+    const productId = req.params.id;
+
+    const productById = await getProductsService(Number(productId));
+    return res.status(200).json({
+      product: productById,
+    });
+  } catch (error: any) {
+    if (error.message === "PRODUCT_NOT_FOUND") {
+      return res.status(404).json({
+        message: "Product not found",
+      });
+    }
+
+    return res.status(500).json({
+      message: "Someting went wrong",
+    });
   }
 }
