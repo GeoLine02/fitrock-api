@@ -7,11 +7,34 @@ export async function getProductsService(page: number) {
 
     const products = await Products.findAll({
       offset: offest,
+      limit: PRODUCTS_PER_PAGE,
     });
 
-    return products;
+    const totalProducts = await Products.count();
+
+    const nextPage =
+      page + PRODUCTS_PER_PAGE < totalProducts
+        ? page + PRODUCTS_PER_PAGE
+        : null;
+
+    return { products, page, nextPage };
   } catch (error) {
     console.log(error);
     throw new Error("SERVER_ERROR");
+  }
+}
+
+export async function getProductById(productId: number) {
+  try {
+    const existingProduct = await Products.findByPk(productId);
+
+    if (!existingProduct) {
+      throw new Error("PRODUCT_NOT_FOUND");
+    }
+
+    return { product: existingProduct };
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }
