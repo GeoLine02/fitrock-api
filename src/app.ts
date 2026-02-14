@@ -6,6 +6,9 @@ import rateLimit from "express-rate-limit";
 import productRoutes from "./routes/products.routes";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
+import cartRoutes from "./routes/cart.routes";
+import { initAssociations } from "./sequelize/models/associations";
+import { authGuard } from "./guards/authGuard";
 const app = express();
 
 const limiter = rateLimit({
@@ -31,6 +34,7 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+initAssociations();
 
 // Test route
 app.get("/", (req, res) => {
@@ -40,7 +44,7 @@ app.get("/", (req, res) => {
 app.use("/products", productRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
-
+app.use("/cart", authGuard, cartRoutes);
 // Listen on port 4000
 const PORT = 4000;
 
