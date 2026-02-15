@@ -24,7 +24,7 @@ export async function getProductsService(page: number) {
   }
 }
 
-export async function getProductById(productId: number) {
+export async function getProductByIdService(productId: number) {
   try {
     const existingProduct = await Products.findByPk(productId);
 
