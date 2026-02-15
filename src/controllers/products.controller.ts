@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { getProductsService } from "../services/products.service";
+import {
+  getProductByIdService,
+  getProductsService,
+} from "../services/products.service";
 
 export async function getProductsController(req: Request, res: Response) {
   try {
@@ -26,12 +29,10 @@ export async function getProductsController(req: Request, res: Response) {
 
 export async function getProductByIdController(req: Request, res: Response) {
   try {
-    const productId = req.params.id;
+    const productId = req.params.productId;
 
-    const productById = await getProductsService(Number(productId));
-    return res.status(200).json({
-      product: productById,
-    });
+    const productById = await getProductByIdService(Number(productId));
+    return res.status(200).json(productById);
   } catch (error: any) {
     if (error.message === "PRODUCT_NOT_FOUND") {
       return res.status(404).json({

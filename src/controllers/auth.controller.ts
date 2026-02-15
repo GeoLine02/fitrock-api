@@ -161,9 +161,6 @@ export async function logOutUserController(_req: Request, res: Response) {
 
 export async function refreshTokenController(req: Request, res: Response) {
   try {
-    console.log("cookies", req.cookies);
-    console.log("headers", req.headers);
-
     const newAccessToken = await refreshTokenService(req.cookies.refreshToken);
 
     if (!newAccessToken) {
