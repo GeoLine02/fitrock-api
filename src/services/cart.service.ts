@@ -5,6 +5,12 @@ export async function getCartItemsService(userId: number) {
   try {
     const cartItems = await Cart.findAll({
       where: { user_id: userId },
+      include: [
+        {
+          model: Products,
+          as: "product",
+        },
+      ],
     });
 
     return cartItems;
@@ -24,6 +30,17 @@ export async function addToCartService(
 
     if (!existingProduct) {
       throw new Error("PRODUCT_NOT_FOUND");
+    }
+
+    const existingCartItem = await Cart.findOne({
+      where: {
+        product_id: productId,
+        user_id: userId,
+      },
+    });
+
+    if (existingCartItem) {
+      throw new Error("ALREADY_IN_CART");
     }
 
     const addedItem = await Cart.create({

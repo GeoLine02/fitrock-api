@@ -9,7 +9,7 @@ import {
 } from "../controllers/cart.controller";
 
 const router = express.Router();
-router.get("/:userId", getCartItemsController);
+router.get("/", getCartItemsController);
 router.post("/", addToCartController);
 router.patch("/quantity/increase", increaseItemQuantityController);
 router.patch("/quantity/decrease", decreaseItemQuantityController);

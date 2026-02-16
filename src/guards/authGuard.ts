@@ -19,6 +19,7 @@ export const authGuard = (req: Request, res: Response, next: NextFunction) => {
     }
 
     if (!accessToken) {
+      console.log("enters");
       return res.status(401).json({
         success: false,
         message: "Unauthorized: No access token provided",

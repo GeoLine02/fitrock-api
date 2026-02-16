@@ -9,12 +9,13 @@ import {
 
 export async function getCartItemsController(req: Request, res: Response) {
   try {
-    const userId = Number(req.params.userId);
-
-    const cartItems = await getCartItemsService(userId);
-
+    const userId = req.user?.id;
+    console.log("userId", userId);
+    const cartItems = await getCartItemsService(userId as number);
+    console.log(cartItems);
     return res.status(200).json(cartItems);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       message: "Something went wrong",
     });
@@ -34,7 +35,15 @@ export async function addToCartController(req: Request, res: Response) {
   } catch (error: any) {
     if (error.message === "PRODUCT_NOT_FOUND") {
       return res.status(404).json({
+        type: "PROUDUCT_NOT_FOUND",
         message: "Product not found",
+      });
+    }
+
+    if (error.message === "ALREADY_IN_CART") {
+      return res.status(400).json({
+        type: "ALREADY_IN_CART",
+        message: "This product is already in cart",
       });
     }
 

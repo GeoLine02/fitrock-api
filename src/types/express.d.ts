@@ -1,9 +1,16 @@
-import { UserJwtPayload } from "../guards/authGuard";
+import "express";
 
 declare global {
   namespace Express {
+    interface UserPayload {
+      id: number;
+      email?: string;
+    }
+
     interface Request {
-      user?: UserJwtPayload;
+      user?: UserPayload;
     }
   }
 }
+
+export {};
