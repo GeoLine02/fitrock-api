@@ -60,21 +60,17 @@ export async function loginUserService(email: string, password: string) {
 }
 
 export async function refreshTokenService(refreshToken: string) {
-  try {
-    const validatedToken = jwt.verify(
-      refreshToken,
-      process.env.REFRESH_TOKEN_SECRET as string,
-    ) as { id: number };
+  // ✅ Remove try-catch, let errors bubble up naturally
+  const validatedToken = jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET as string,
+  ) as { id: number };
 
-    if (!validatedToken) {
-      throw new Error("INVALID_REFRESH_TOKEN");
-    }
-
-    const newAccessToken = generateAccessToken({ id: validatedToken.id });
-
-    return newAccessToken;
-  } catch (error) {
-    console.log(error);
-    throw error;
+  // ❌ jwt.verify already throws if invalid, this check is unnecessary
+  if (!validatedToken) {
+    throw new Error("INVALID_REFRESH_TOKEN");
   }
+
+  const newAccessToken = generateAccessToken({ id: validatedToken.id });
+  return newAccessToken;
 }

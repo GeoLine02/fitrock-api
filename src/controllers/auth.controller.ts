@@ -8,6 +8,7 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/generateToken";
+import jwt from "jsonwebtoken";
 
 export async function registerUserController(req: Request, res: Response) {
   try {
@@ -161,15 +162,17 @@ export async function logOutUserController(_req: Request, res: Response) {
 
 export async function refreshTokenController(req: Request, res: Response) {
   try {
-    const newAccessToken = await refreshTokenService(req.cookies.refreshToken);
-
-    if (!newAccessToken) {
+    const refreshToken = req.cookies.refreshToken;
+    // ✅ Check if refresh token exists
+    if (!refreshToken) {
       return res.status(401).json({
         success: false,
-        message: "Invalid refresh token",
+        message: "No refresh token provided",
       });
     }
 
+    const newAccessToken = await refreshTokenService(refreshToken);
+    console.log("newAccessToken", newAccessToken);
     const isProduction = process.env.NODE_ENV === "production";
 
     res.cookie("accessToken", newAccessToken, {
@@ -178,9 +181,27 @@ export async function refreshTokenController(req: Request, res: Response) {
       sameSite: isProduction ? "none" : "lax",
       maxAge: 15 * 60 * 1000,
     });
+
+    return res.status(200).json({
+      success: true,
+      message: "Token refreshed successfully",
+      accessToken: newAccessToken,
+    });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({
+    console.error("Refresh token error:", error);
+
+    // ✅ Distinguish between auth errors and server errors
+    if (
+      error instanceof jwt.JsonWebTokenError ||
+      error instanceof jwt.TokenExpiredError
+    ) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid or expired refresh token",
+      });
+    }
+
+    return res.status(500).json({
       success: false,
       message: "Internal Server Error",
     });
