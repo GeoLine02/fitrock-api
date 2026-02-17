@@ -97,7 +97,7 @@ export async function decreaseItemQuantityController(
 
 export async function deleteCartItemController(req: Request, res: Response) {
   try {
-    const itemId = Number(req.params.itemId);
+    const itemId = Number(req.params.cartId);
 
     const deletedCartItem = await deleteCartItemService(itemId);
     return res.status(200).json(deletedCartItem);
