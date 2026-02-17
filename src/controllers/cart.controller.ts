@@ -10,9 +10,7 @@ import {
 export async function getCartItemsController(req: Request, res: Response) {
   try {
     const userId = req.user?.id;
-    console.log("userId", userId);
     const cartItems = await getCartItemsService(userId as number);
-    console.log(cartItems);
     return res.status(200).json(cartItems);
   } catch (error) {
     console.log(error);
@@ -99,7 +97,7 @@ export async function decreaseItemQuantityController(
 
 export async function deleteCartItemController(req: Request, res: Response) {
   try {
-    const itemId = Number(req.params.itemId);
+    const itemId = Number(req.params.cartId);
 
     const deletedCartItem = await deleteCartItemService(itemId);
     return res.status(200).json(deletedCartItem);
