@@ -1,5 +1,6 @@
 import { Model, DataTypes, Sequelize, Optional } from "sequelize";
 import { sequelize } from "../../db"; // import your Sequelize instance
+import { TypeModels } from "./associations";
 
 // Interface for attributes
 interface ProductAttributes {
@@ -10,6 +11,7 @@ interface ProductAttributes {
   product_discount?: number;
   product_quantity?: number;
   product_weight?: number;
+  filter_id: number;
 }
 
 // Optional attributes for creation
@@ -27,13 +29,17 @@ export class Products
   public product_discount?: number;
   public product_quantity?: number;
   public product_weight?: number;
+  public filter_id!: number;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
   // Associations placeholder
-  static associate(models: any) {
-    // define associations here
+  static associate(models: TypeModels) {
+    Products.belongsTo(models.Filters, {
+      foreignKey: "filter_id",
+      as: "filter",
+    });
   }
 }
 
@@ -64,6 +70,15 @@ Products.init(
     },
     product_weight: {
       type: DataTypes.INTEGER,
+    },
+    filter_id: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Filters",
+        key: "id",
+      },
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
     },
   },
   {

@@ -7,6 +7,8 @@ import productRoutes from "./routes/products.routes";
 import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import cartRoutes from "./routes/cart.routes";
+import filtersRouter from "./routes/filter.routes";
+
 import { initAssociations } from "./sequelize/models/associations";
 import { authGuard } from "./guards/authGuard";
 const app = express();
@@ -45,6 +47,7 @@ app.use("/products", productRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/cart", authGuard, cartRoutes);
+app.use("/filters", filtersRouter);
 // Listen on port 4000
 const PORT = 4000;
 
