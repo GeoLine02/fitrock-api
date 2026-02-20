@@ -197,7 +197,7 @@ export async function refreshTokenController(req: Request, res: Response) {
     ) {
       return res.status(401).json({
         success: false,
-        message: "Invalid or expired refresh token",
+        message: "Token expired",
       });
     }
 
