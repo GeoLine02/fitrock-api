@@ -12,6 +12,7 @@ import filtersRouter from "./routes/filter.routes";
 import { initAssociations } from "./sequelize/models/associations";
 import { authGuard } from "./guards/authGuard";
 const app = express();
+app.set("trust proxy", 1);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -24,7 +25,6 @@ const limiter = rateLimit({
   legacyHeaders: false,
 });
 
-app.set("trust proxy", 1);
 app.use(limiter);
 
 // Middlewares
