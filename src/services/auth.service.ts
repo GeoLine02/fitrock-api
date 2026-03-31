@@ -45,7 +45,10 @@ export async function loginUserService(email: string, password: string) {
       throw new Error("INVALID_CREDENTIALS");
     }
 
-    const isPasswordMatch = bcrypt.compare(password, existingUser?.password);
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      existingUser?.password,
+    );
 
     console.log("existingUser", existingUser);
     if (!isPasswordMatch) {
